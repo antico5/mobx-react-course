@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import './01_observable_function'
+import './02_observable_class'
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
