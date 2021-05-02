@@ -1,4 +1,5 @@
 import { action, autorun, makeObservable, observable, runInAction } from "mobx"
+import { resolve } from "node:path"
 
 class cPerson {
   @observable name: string
@@ -9,11 +10,6 @@ class cPerson {
     this.age = age
     makeObservable(this)
   }
-
-  // 1st way: action function (not batched)
-  @action updateName(name: string){
-    this.name = name
-  }
 }
 
 const newPerson = new cPerson('Armando', 29)
@@ -22,20 +18,16 @@ autorun(()=>{
   console.log(`Person: ${newPerson.name}, ${newPerson.age}`)
 })
 
-newPerson.updateName('Dylan')
+const sleep = () => new Promise<void>((resolve, reject) => {
+  setTimeout(() => {
+    resolve()
+  }, 1000);
+})
 
-// 2nd way: runInAction (batched)
-runInAction(()=>{
-  newPerson.age=30
+runInAction(async ()=>{
   newPerson.name='Cesar'
+  await sleep() // await breaks the batching
+  newPerson.age=30
 })
-
-// 3rd way: action function (not batched)
-
-const nameUpdater = action(()=> {
-  newPerson.name = 'Rob'
-})
-
-nameUpdater()
 
 export {}
